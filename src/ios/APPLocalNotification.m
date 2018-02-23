@@ -23,7 +23,8 @@
 #import "APPNotificationOptions.h"
 #import "UNUserNotificationCenter+APPLocalNotification.h"
 #import "UNNotificationRequest+APPLocalNotification.h"
-#import "APPNotificationContent.h"
+#import "PushPlugin.h"
+#import "AppDelegate+notification.h"
 
 @interface APPLocalNotification ()
 
@@ -506,8 +507,23 @@
 {
     UNNotificationRequest* toast = notification.request;
 
-    if ([toast.trigger isKindOfClass:UNPushNotificationTrigger.class])
+    [_delegate userNotificationCenter:center
+              willPresentNotification:notification
+                withCompletionHandler:handler];
+
+    if ([toast.trigger isKindOfClass:UNPushNotificationTrigger.class]){
+        if ([PushPlugin class]){
+            AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            if(appDelegate != nil){
+                PushPlugin *pushHandler = [appDelegate getCommandInstance:@"PushNotification"];
+                pushHandler.notificationMessage = notification.request.content.userInfo;
+                pushHandler.isInline = YES;
+                [pushHandler notificationReceived];
+            }
+            
+        }
         return;
+    }
     
     APPNotificationOptions* options = toast.options;
 
