@@ -507,10 +507,6 @@
 {
     UNNotificationRequest* toast = notification.request;
 
-    [_delegate userNotificationCenter:center
-              willPresentNotification:notification
-                withCompletionHandler:handler];
-
     if ([toast.trigger isKindOfClass:UNPushNotificationTrigger.class]){
         if ([PushPlugin class]){
             AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
