@@ -510,10 +510,21 @@
     if ([toast.trigger isKindOfClass:UNPushNotificationTrigger.class]){
         if ([PushPlugin class]){
             AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            BOOL _inline = NO;
+            if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive)
+            {
+                NSLog(@"tapped");
+                // user has tapped notification
+            }
+            else
+            {
+                _inline = YES;
+                // user opened app from app icon
+            }
             if(appDelegate != nil){
                 PushPlugin *pushHandler = [appDelegate getCommandInstance:@"PushNotification"];
                 pushHandler.notificationMessage = notification.request.content.userInfo;
-                pushHandler.isInline = YES;
+                pushHandler.isInline = _inline;
                 [pushHandler notificationReceived];
             }
             
@@ -548,8 +559,30 @@
 
     completionHandler();
     
-    if ([toast.trigger isKindOfClass:UNPushNotificationTrigger.class])
+    if ([toast.trigger isKindOfClass:UNPushNotificationTrigger.class]){
+        if ([PushPlugin class]){
+            AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            BOOL _inline = NO;
+            if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive)
+            {
+                NSLog(@"tapped");
+                // user has tapped notification
+            }
+            else
+            {
+                _inline = YES;
+                // user opened app from app icon
+            }
+            if(appDelegate != nil){
+                PushPlugin *pushHandler = [appDelegate getCommandInstance:@"PushNotification"];
+                pushHandler.notificationMessage = notification.request.content.userInfo;
+                pushHandler.isInline = _inline;
+                [pushHandler notificationReceived];
+            }
+            
+        }   
         return;
+    }
 
     NSMutableDictionary* data = [[NSMutableDictionary alloc] init];
     NSString* action          = response.actionIdentifier;
