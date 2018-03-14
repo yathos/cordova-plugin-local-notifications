@@ -575,7 +575,7 @@
             }
             if(appDelegate != nil){
                 PushPlugin *pushHandler = [appDelegate getCommandInstance:@"PushNotification"];
-                pushHandler.notificationMessage = notification.request.content.userInfo;
+                pushHandler.notificationMessage = toast.content.userInfo;
                 pushHandler.isInline = _inline;
                 [pushHandler notificationReceived];
             }
